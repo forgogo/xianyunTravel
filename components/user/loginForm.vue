@@ -12,7 +12,7 @@
     </el-form-item>
 
     <el-form-item prop="password">
-      <el-input type="password" v-model.number="userForm.password" placeholder="密码"></el-input>
+      <el-input type="password" v-model="userForm.password" placeholder="密码"></el-input>
     </el-form-item>
     <p class="form-text">
       <a href="/user/login#">忘记密码</a>
