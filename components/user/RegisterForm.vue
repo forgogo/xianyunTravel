@@ -13,7 +13,7 @@
     <el-form-item class="form-item" prop="captcha">
       <el-input placeholder="验证码" v-model="userForm.captcha" maxlength="6">
         <template slot="append">
-          <el-button @click="handleSendCaptcha">发送验证码</el-button>
+          <el-button @click="handleSendCaptcha" id="btn">发送验证码</el-button>
         </template>
       </el-input>
     </el-form-item>
@@ -122,6 +122,10 @@ export default {
       });
     },
     handleSendCaptcha() {
+      if (!this.userForm.username) {
+        this.$message.error("手机号码不能为空");
+        return;
+      }
       this.$axios({
         data: { tel: this.userForm.username },
         url: "/captchas",
@@ -129,6 +133,23 @@ export default {
       })
         .then(res => {
           console.log(res);
+          const btn = document.querySelector("#btn");
+          const span = document.querySelector("#btn>span");
+          btn.disabled = true;
+          let time = +btn.dataset.time || 60;
+
+          const timerId = setInterval(function() {
+            time--;
+            span.innerHTML = time + "s";
+            if (time === 0) {
+              btn.disabled = false;
+              span.innerHTML = "获取验证码";
+              // 清除定时器，让倒计时效果停下来
+              clearInterval(timerId);
+            }
+          }, 1000);
+          // btn.disabled = true;
+          // console.log(btn);
           this.$alert("验证码： " + res.data.code, "温馨提示", {
             confirmButtonText: "确定",
             callback: action => {}
