@@ -113,7 +113,7 @@ export default {
         this.form.destCity = arr[0].value;
         this.form.destCode = arr[0].sort;
       }
-      console.log(arr);
+      // console.log(arr);
       cb(arr);
     },
 
@@ -169,6 +169,9 @@ export default {
         }
       });
       if (valid === false) return;
+
+      this.$store.commit('air/setHistory', this.form)
+      
       this.$router.push({
         path: "/air/flights",
         query: this.form

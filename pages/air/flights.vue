@@ -33,6 +33,7 @@
       <!-- 侧边栏 -->
       <div class="aside">
         <!-- 侧边栏组件 -->
+        <FlightsAside />
       </div>
     </el-row>
   </section>
@@ -45,6 +46,8 @@ import FlightsListHead from "@/components/air/flightsListHead.vue";
 import FlightsFilters from "@/components/air/flightsFilters.vue";
 //机票组件
 import FlightsItem from "@/components/air/flightsItem.vue";
+//右边历史记录组件
+import FlightsAside from "@/components/air/flightsAside.vue";
 import moment from "moment";
 
 export default {
@@ -127,10 +130,16 @@ export default {
   mounted() {
     this.getData();
   },
+  watch: {
+    $route() {
+      this.getData();
+    }
+  },
   components: {
     FlightsListHead,
     FlightsItem,
-    FlightsFilters
+    FlightsFilters,
+    FlightsAside
   }
 };
 </script>
