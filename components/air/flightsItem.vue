@@ -11,14 +11,14 @@
           <el-row type="flex" justify="space-between" class="flight-info-center">
             <el-col :span="8" class="flight-airport">
               <strong>{{data.dep_time}}</strong>
-              <span>{{data.dst_airport_name}}{{data.dst_airport_quay}}</span>
+              <span>{{data.org_airport_name}}}{{data.org_airport_quay}}</span>
             </el-col>
             <el-col :span="8" class="flight-time">
               <span>{{rankTime}}</span>
             </el-col>
             <el-col :span="8" class="flight-airport">
               <strong>{{data.arr_time}}</strong>
-              <span>{{data.org_airport_name}}}{{data.org_airport_quay}}</span>
+              <span> {{data.dst_airport_name}}{{data.dst_airport_quay}}</span>
             </el-col>
           </el-row>
         </el-col>
