@@ -189,11 +189,13 @@ export default {
           Authorization: `Bearer ${userInfo.token || "NO TOKEN"}`
         }
       }).then(res => {
-        console.log(res);
-
+        const { data: {id} } = res.data;
+        
+        console.log(id);
         // 跳转到付款页
         this.$router.push({
-          path: "/air/pay"
+          path: `/air/airorders/?id=${id}`,
+          
         });
       });
     }
