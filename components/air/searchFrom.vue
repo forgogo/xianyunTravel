@@ -57,7 +57,6 @@
 
 <script>
 import moment from "moment";
-import { reject } from "q";
 export default {
   data() {
     return {

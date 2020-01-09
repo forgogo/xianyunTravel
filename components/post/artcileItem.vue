@@ -3,17 +3,14 @@
     <div class="list" v-for="(item,index) in posts" :key="index">
       <div class="post-item" v-if="item.images.length===3">
         <h4 class="post-list-title" title="塞班贵？一定是你的打开方式不对！6000块玩转塞班">
-          <a href="#">{{item.title}}</a>
+          <a :href="'/post/detail?id='+item.id">{{item.title}}</a>
         </h4>
         <p class="post-desc">
-          <a
-            href="/post/detail?id=4"
-            class
-          >{{item.summary}}</a>
+          <a :href="'/post/detail?id='+item.id" class>{{item.summary}}</a>
         </p>
         <div class="card-images">
-          <a href="/post/detail?id=4" v-for="(item,index) in item.images" :key="index">
-            <img :src="item"/>
+          <a :href="'/post/detail?id='+item.id" v-for="(item,index) in item.images" :key="index">
+            <img :src="item" />
           </a>
         </div>
         <div class="post-info el-row is-justify-space-between el-row--flex">
@@ -30,32 +27,32 @@
               <a href="/user/personal" class>{{item.account.nickname}}</a>
             </div>
             <span>
-              <i class="el-icon-view"></i> {{item.watch}}
+              <i class="el-icon-view"></i>
+              {{item.watch}}
             </span>
           </div>
-          <span class="post-info-right">{{item.like}} 赞</span>
+          <span class="post-info-right">{{item.like === null ? "0" : item.like }} 赞</span>
         </div>
       </div>
       <!-- 左图右文 -->
       <div class="post-item second" v-else-if="item.images.length<3">
         <div class="post-cover">
-          <a href="/post/detail?id=5" class>
-            <img :src="item.images[0]"/>
+          <a :href="'/post/detail?id='+item.id" class>
+            <img :src="item.images[0]" />
           </a>
         </div>
         <div class="post-content">
           <h4 :title="item.title" class="post-list-title">
-            <a href="/post/detail?id=5">{{item.title}}</a>
+            <a :href="'/post/detail?id='+item.id">{{item.title}}</a>
           </h4>
           <p class="post-desc">
-            <a
-              href="/post/detail?id=5"
-            >{{item.summary}}</a>
+            <a :href="'/post/detail?id='+item.id">{{item.summary}}</a>
           </p>
           <div class="post-info el-row is-justify-space-between el-row--flex">
             <div class="post-info-left el-row is-align-middle el-row--flex">
               <span>
-                <i class="el-icon-location-outline"></i>{{item.cityName}}
+                <i class="el-icon-location-outline"></i>
+                {{item.cityName}}
               </span>
               <div class="post-user el-row is-align-middle el-row--flex">
                 by
@@ -65,10 +62,11 @@
                 <a href="/user/personal" class>{{item.account.nickname}}</a>
               </div>
               <span>
-                <i class="el-icon-view"></i> {{item.watch}}
+                <i class="el-icon-view"></i>
+                {{item.watch}}
               </span>
             </div>
-            <span class="post-info-right">{{item.like}} 赞</span>
+            <span class="post-info-right">{{item.like === null ? "0" : item.like }} 赞</span>
           </div>
         </div>
       </div>
@@ -80,10 +78,10 @@
 export default {
   data() {
     return {
-      isShow: false,
+      isShow: false
     };
   },
-    // 父传子 接受父组件传过来的航班信息
+  // 父传子 接受父组件传过来的航班信息
   props: {
     // 数据
     posts: {
@@ -93,7 +91,7 @@ export default {
         return [];
       }
     }
-  },
+  }
 };
 </script>
 

@@ -23,5 +23,7 @@ export default {
 </script>
 
 <style>
+
 @import "../assets/reset.css";
+@import "../assets/icon/iconfont.css"
 </style>

@@ -18,10 +18,10 @@
       >
         <ul>
           <li v-for="(item,index) in item.children" :key="index">
-            <a href="/post?city=%E9%9D%92%E5%B2%9B" class>
+            <a href="#" class>
               <i>{{index+1}}</i>
-              <strong>{{item.city}}</strong>
-              <span>{{item.desc}}</span>
+              <strong @click="search(item.city)">{{item.city}}</strong>
+              <span @click="search(item.city)">{{item.desc}}</span>
             </a>
           </li>
         </ul>
@@ -54,6 +54,9 @@ export default {
     onMouserOut() {
       this.currentTab = "";
       this.isShow = !this.isShow;
+    },
+    search(city) {
+    this.$emit('asideSearch',city)
     }
   }
 };
@@ -91,7 +94,7 @@ export default {
   z-index: -1;
   ul {
     li {
-        padding: 3px 15px;
+      padding: 3px 15px;
       a {
         i {
           font-size: 26px;

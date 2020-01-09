@@ -4,7 +4,7 @@
       <div class="menus-wrapper">
         <div class="menus-body">
           <!-- 左边侧边栏 -->
-          <cebianlan />
+          <cebianlan @asideSearch="search" />
           <!-- 推荐城市 -->
           <div class="aside-recommend">
             <h4 class="aside-title">推荐城市</h4>
@@ -22,17 +22,17 @@
           </el-input>
         </div>
         <div class="search-recommend">
-          推荐：
-          <span>广州</span>
-          <span>上海</span>
-          <span>北京</span>
+          <span>推荐：</span>
+          <a v-for="(item,index) in recommend" :key="index" @click="search(item)">{{item}}</a>
         </div>
         <!-- 写游记 -->
         <div class="post-title">
           <h4>推荐攻略</h4>
-          <el-button type="primary">
-            <i class="el-icon-edit"></i>写游记
-          </el-button>
+          <nuxt-link to="/post/create">
+            <el-button type="primary">
+              <i class="el-icon-edit"></i>写游记
+            </el-button>
+          </nuxt-link>
         </div>
         <!-- 文章列表 -->
         <div class="post-list">
@@ -70,6 +70,7 @@ export default {
       searchCity: "",
       posts: [], //文章详情
       cachePosts: [], //创建新数组，保存文章列表
+      recommend: ["广州", "上海", "北京"],
       //分页插件的属性
       currentPage: 1, //默认显示第一页
       pageIndex: 1, // 当前页数
@@ -106,8 +107,8 @@ export default {
       }).then(res => {
         this.total = res.data.total;
         this.posts = res.data.data;
+console.log(res.data.data);
 
-        // this.cachePosts =this.posts.slice(0,this.pageSize+1);
 
         // 分页初始化为1
         this.pageIndex = 1;
@@ -119,19 +120,15 @@ export default {
       this.pageIndex = 1;
     },
     handleCurrentChange(val) {
-      console.log(val);
-
       this.pageIndex = val;
     },
     search(city) {
       this.$axios({
         url: "/posts",
-        parmas:{city:70}
-      }).then(res=>{
-        console.log(city);
-        
-        console.log(res);
-        
+        params: { city }
+      }).then(res => {
+        this.total = res.data.total;
+        this.posts = res.data.data;
       });
     }
   }
@@ -172,6 +169,13 @@ export default {
       padding: 10px 0;
       font-size: 12px;
       color: #666;
+      a {
+        margin-right: 5px;
+        cursor: pointer;
+        &:hover {
+          color: orange;
+        }
+      }
     }
     .post-title {
       h4 {
