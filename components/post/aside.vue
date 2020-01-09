@@ -86,7 +86,7 @@ export default {
 }
 .sub-menus {
   position: absolute;
-  right: -352px;
+  right: -351px;
   top: 0;
   width: 350px;
   border: 1px solid #ddd;

@@ -45,38 +45,52 @@
             resize="none"
             type="textarea"
             placeholder="说点什么吧"
-            v-model="textarea"
+            v-model="comment.content"
             maxlength="120"
             show-word-limit
           ></el-input>
           <!-- 图片上传 -->
-          <div class="cmt-input-ctrls">
+          <div class="cmt-input-ctrls el-row is-justify-space-between el-row--flex">
             <el-upload
+              :limit="3"
               name="files"
               action="http://127.0.0.1:1337/upload"
               list-type="picture-card"
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
+              :on-success="coverSuccess"
             >
               <i class="el-icon-plus"></i>
             </el-upload>
             <el-dialog :visible.sync="dialogVisible">
               <img width="100%" :src="dialogImageUrl" alt />
             </el-dialog>
-
-            <el-button id="btn" type="primary">提交</el-button>
+            <div id="btn" > 
+              <el-button type="primary" @click="postCom">提交</el-button>
+            </div>
           </div>
         </div>
       </div>
+      <!-- 评论列表 -->
+      <div class="cmt-list"></div>
     </div>
-    <div class="aside"></div>
+    <div class="aside">
+      <detailAside />
+    </div>
   </div>
 </template>
 
 <script>
+import detailAside from "@/components/post/detailAside";
 export default {
   data() {
     return {
+      // 发布评论属性
+      comment: {
+        content: "",
+        pics: [],
+        post: ""
+      },
       posts: {
         city: "",
         comments: []
@@ -91,6 +105,21 @@ export default {
     this.getPosts();
   },
   methods: {
+    postCom() {
+      const {
+        user: { userInfo }
+      } = this.$store.state;
+      this.$axios({
+        method: "post",
+        url: "/comments",
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`
+        },
+        data: this.comment
+      }).then(res => {
+        console.log(res);
+      });
+    },
     getPosts() {
       const { id } = this.$route.query;
       this.$axios({
@@ -98,6 +127,7 @@ export default {
         params: { id }
       }).then(res => {
         this.posts = res.data.data[0];
+        this.comment.post = id;
         document.querySelector(".post-content").innerHTML = this.posts.content;
         console.log(res);
       });
@@ -164,8 +194,19 @@ export default {
     },
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
+      console.log(this.dialogImageUrl);
+
       this.dialogVisible = true;
+    },
+    coverSuccess(response) {
+      // console.log(response);
+      // 如果文件上传成功，将本次上传成功的url保存
+      this.comment.pics.push("http://127.0.0.1:1337" + response[0].url);
+      //   console.log(this.comment.pics);
     }
+  },
+  components: {
+    detailAside
   }
 };
 </script>
@@ -227,10 +268,14 @@ export default {
     }
   }
   #btn {
-    float: right;
+    margin-top: 100px
   }
   .aside {
     width: 280px;
+    // 相关攻略
+  }
+  .cmt-list {
+    border: 1px solid #ddd;
   }
 }
 </style>
