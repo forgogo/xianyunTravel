@@ -9,7 +9,7 @@
           </div>
           <div class="post-text">
             <div>{{item.title}}</div>
-            <p>{{item.created_at}} 阅读{{item.watch}} </p>
+            <p>{{item.updated_at | checkTime}} 阅读{{item.watch | checkWatch}}</p>
           </div>
         </div>
       </a>
@@ -18,15 +18,22 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   data() {
     return {
-        recommend:[]
+      recommend: []
     };
   },
+  filters: {
+    checkTime(value) {
+      return moment(value).format("YYYY-MM-DD");
+    },
+    checkWatch(value) {
+      if (value == null) return 0;
+    }
+  },
   mounted() {
-      console.log(11);
-      
     this.getRecommend();
   },
   methods: {
@@ -36,8 +43,8 @@ export default {
         url: "/posts/recommend",
         parmas: { id }
       }).then(res => {
-        console.log(res);
-        this.recommend=res.data.data
+        // console.log(res);
+        this.recommend = res.data.data;
       });
     }
   }

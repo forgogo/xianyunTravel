@@ -40,6 +40,10 @@
       <!-- 评论 -->
       <div class="cmt-wrapper">
         <h4 class="cmt-title">评论</h4>
+        <span class="replyTag el-tag el-tag--info" v-show="isShow">
+          @{{replyName}}
+          <i class="el-tag__close el-icon-close" @click="removeReply"></i>
+        </span>
         <div class="cm-input">
           <el-input
             resize="none"
@@ -59,20 +63,23 @@
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
               :on-success="coverSuccess"
+              ref="upload"
             >
               <i class="el-icon-plus"></i>
             </el-upload>
             <el-dialog :visible.sync="dialogVisible">
               <img width="100%" :src="dialogImageUrl" alt />
             </el-dialog>
-            <div id="btn" > 
+            <div id="btn">
               <el-button type="primary" @click="postCom">提交</el-button>
             </div>
           </div>
         </div>
       </div>
       <!-- 评论列表 -->
-      <div class="cmt-list"></div>
+      <div class="cmt-list">
+        <comment :commentNum="commentNum" @getReply="getReply" />
+      </div>
     </div>
     <div class="aside">
       <detailAside />
@@ -82,14 +89,20 @@
 
 <script>
 import detailAside from "@/components/post/detailAside";
+//评论item
+import comment from "@/components/post/comment";
 export default {
   data() {
     return {
+      isShow: false,
+      replyName: "",
+      commentNum: "",
       // 发布评论属性
       comment: {
         content: "",
         pics: [],
         post: ""
+        // id:''
       },
       posts: {
         city: "",
@@ -118,6 +131,15 @@ export default {
         data: this.comment
       }).then(res => {
         console.log(res);
+        this.$refs.upload.clearFiles();
+        this.comment.content = "";
+        this.comment.pics = [];
+        this.comment.post = "";
+        this.commentNum += 1;
+        this.$message({
+          message: "评论发布成功！",
+          type: "success"
+        });
       });
     },
     getPosts() {
@@ -129,7 +151,7 @@ export default {
         this.posts = res.data.data[0];
         this.comment.post = id;
         document.querySelector(".post-content").innerHTML = this.posts.content;
-        console.log(res);
+        // console.log(res);
       });
     },
     // 收藏文章
@@ -201,12 +223,35 @@ export default {
     coverSuccess(response) {
       // console.log(response);
       // 如果文件上传成功，将本次上传成功的url保存
-      this.comment.pics.push("http://127.0.0.1:1337" + response[0].url);
-      //   console.log(this.comment.pics);
+      this.comment.pics.push(response[0]);
+      console.log(this.comment.pics);
+    },
+    // 移除封面图片钩子函数
+    // eslint-disable-next-line no-unused-vars
+    coverRemove(file, fileList) {
+      let id = file.response.data.id;
+      for (let i = 0; i < this.comment.pics.length; i++) {
+        if (this.comment.pics[i].id === id) {
+          // 找到了，就是你
+          this.comment.pics.splice(i, 1);
+          break;
+        }
+      }
+    },
+    getReply(data) {
+      this.isShow = true;
+      document.querySelector(".el-textarea__inner").focus();
+      this.replyName = data.account.nickname;
+      this.comment.follow = data.id;
+    },
+    removeReply() {
+      this.isShow = false;
+      delete this.comment.id;
     }
   },
   components: {
-    detailAside
+    detailAside,
+    comment
   }
 };
 </script>
@@ -256,6 +301,9 @@ export default {
         font-size: 18px;
         margin-bottom: 20px;
       }
+      .replyTag {
+        margin-bottom: 10px;
+      }
     }
   }
   .el-textarea {
@@ -268,7 +316,7 @@ export default {
     }
   }
   #btn {
-    margin-top: 100px
+    margin-top: 100px;
   }
   .aside {
     width: 280px;
@@ -276,6 +324,7 @@ export default {
   }
   .cmt-list {
     border: 1px solid #ddd;
+    margin-bottom: 22px;
   }
 }
 </style>

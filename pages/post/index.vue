@@ -48,8 +48,8 @@
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
             :current-page="currentPage"
-            :page-sizes="[5, 10, 15, 20]"
-            :page-size="pageSize"
+            :page-sizes="[100, 200, 300, 400]"
+            :page-size="100"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total"
           ></el-pagination>
@@ -107,8 +107,7 @@ export default {
       }).then(res => {
         this.total = res.data.total;
         this.posts = res.data.data;
-console.log(res.data.data);
-
+        console.log(res.data.data);
 
         // 分页初始化为1
         this.pageIndex = 1;
